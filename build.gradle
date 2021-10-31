@@ -1,0 +1,45 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.31'
+    id 'java'
+}
+
+group 'moe.quill'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'm2-dv8tion'
+        url 'https://m2.dv8tion.net/releases'
+    }
+}
+
+dependencies {
+
+    //NEW DISCORD
+    implementation("net.dv8tion:JDA:4.3.0_339")
+
+    //JSON
+    implementation 'com.google.code.gson:gson:2.8.8'
+    //Reflection
+    implementation 'org.reflections:reflections:0.10.2'
+    //Kotlin
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.31'
+    //Tests
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    //DI
+    implementation 'org.kodein.di:kodein-di:7.9.0'
+}
+
+jar {
+    archiveBaseName = "tsubasa"
+    archiveVersion = "0.0.1"
+
+    manifest {
+        attributes(
+                'Main-Class': 'moe.quill.tsubasa.Tsubasa'
+        )
+    }
+
+}
