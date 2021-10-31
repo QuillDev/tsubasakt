@@ -7,8 +7,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 class SlashCommandListener(private val commandRegistrar: CommandRegistrar) : ListenerAdapter() {
 
     override fun onSlashCommand(event: SlashCommandEvent) {
+        println(event.responseNumber)
 
-        val command = commandRegistrar.commands[event.name] ?: {
+        val command = commandRegistrar.slashProcessors[event.name] ?: {
             it.reply("There is no command with the name '$event.name'").setEphemeral(true).queue()
         }
         command.invoke(event)
