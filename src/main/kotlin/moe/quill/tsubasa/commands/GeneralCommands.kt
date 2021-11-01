@@ -1,14 +1,13 @@
 package moe.quill.tsubasa.commands
 
-import moe.quill.tsubasa.framework.annotations.ClickHandler
+import dev.minn.jda.ktx.awaitButton
+import kotlinx.coroutines.withTimeoutOrNull
 import moe.quill.tsubasa.framework.annotations.CommandHandler
 import moe.quill.tsubasa.framework.annotations.CommandProcessor
 import net.dv8tion.jda.api.MessageBuilder
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.Button
-import net.dv8tion.jda.api.interactions.components.Component
 
 @CommandProcessor
 class GeneralCommands {
@@ -24,19 +23,22 @@ class GeneralCommands {
     }
 
     @CommandHandler(name = "dev", description = "Just a dev testing command")
-    fun dev(event: SlashCommandEvent) {
+    suspend fun dev(event: SlashCommandEvent) {
+        val clickable = Button.primary("dev_test", "????")
+
         event.reply(
             MessageBuilder().setContent("Hello World!")
-                .setActionRows(ActionRow.of(Button.primary("dev_test", "????")))
+                .setActionRows(ActionRow.of(clickable))
                 .build()
         ).setEphemeral(true).queue()
-    }
 
-    @ClickHandler(commandName = "dev")
-    fun devClick(event: ButtonClickEvent) {
-        println(event.componentId)
-        if (event.componentId != "dev_test") return
-        event.editMessage("Ye it works, poggers").queue()
+        //TODO: Move this to a helper method of some sort
+        withTimeoutOrNull(60000) {
+            val pressed = event.user.awaitButton(clickable)
+            pressed.deferEdit().queue()
+            pressed.editMessage("Clicked it")
+        } ?: event.hook.editOriginal("Timed Out.").setActionRows(emptyList()).queue()
+
 
     }
 

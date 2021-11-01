@@ -1,5 +1,6 @@
 package moe.quill.tsubasa
 
+import dev.minn.jda.ktx.light
 import moe.quill.tsubasa.framework.commands.CommandRegistrar
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.entities.Activity
@@ -14,8 +15,7 @@ class Tsubasa {
         @JvmStatic
         fun main(args: Array<String>) {
             val di = DI {
-                bindSingleton { provideShardManager() }
-                bindSingleton { instance<ShardManager>().shards.firstOrNull()!! }
+                bindSingleton { light(System.getenv("DISCORD_TOKEN"), enableCoroutines = true) }
                 bindSingleton { CommandRegistrar(instance(), di) }
             }
 
