@@ -4,13 +4,11 @@ import dev.minn.jda.ktx.onCommand
 import moe.quill.tsubasa.framework.annotations.CommandHandler
 import moe.quill.tsubasa.framework.annotations.CommandProcessor
 import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.events.Event
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent
 import org.kodein.di.DI
 import org.kodein.di.instance
 import org.reflections.Reflections
 import kotlin.jvm.internal.Reflection
-import kotlin.reflect.KParameter
 import kotlin.reflect.full.callSuspend
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.findAnnotation
@@ -36,6 +34,7 @@ class CommandRegistrar(private val client: JDA, private val services: DI) {
             Reflection.getOrCreateKotlinClass(clazz).declaredFunctions.forEach { function ->
 
                 val constructor = clazz.constructors.firstOrNull() ?: return
+
                 val constructorObjects = constructor.parameterTypes.map { services.instance<Any>(it) }
 
                 val instance = constructor.newInstance(*constructorObjects.toTypedArray())
